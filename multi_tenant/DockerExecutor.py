@@ -1,13 +1,8 @@
-import base64
 import json
-import os
-import pickle
 import re
-import signal
 import socket
-import subprocess
-import sys
 import tempfile
+import threading
 import time
 import uuid
 from pathlib import Path
@@ -21,6 +16,7 @@ from websocket import create_connection
 
 from smolagents.local_python_executor import BASE_BUILTIN_MODULES, PythonExecutor, DEFAULT_MAX_LEN_OUTPUT
 from smolagents.tools import Tool
+import websocket
 
 
 class DockerExecutor(PythonExecutor):
@@ -40,49 +36,39 @@ class DockerExecutor(PythonExecutor):
         port (int): Port to use for the container (0 for automatic assignment)
     """
     
-    _image_built = False
     _image_name = "jupyter-kernel-executor"
     # Track used ports to avoid conflicts between instances
     _used_ports = set()
+    # Lock for accessing _used_ports to avoid race conditions
+    _port_lock = threading.Lock()
     
     _dockerfile_content = """
 FROM python:3.12-slim
 
-# Install Jupyter and common dependencies
-RUN pip install jupyter-kernel-gateway numpy pandas matplotlib seaborn scikit-learn requests ipykernel
+# Install dependencies
+RUN pip install jupyter-kernel-gateway ipykernel
 
-# Create workspace directory
-WORKDIR /workspace
+RUN python -m ipykernel install --name python3 --display-name "Python 3"
 
-# Expose port for Jupyter
+# Expose the default port
 EXPOSE 8888
 
-# Create config file
-RUN mkdir -p /root/.jupyter && \\
-    echo "c.KernelGatewayApp.allow_origin = '*'" > /root/.jupyter/jupyter_kernel_gateway_config.py && \\
-    echo "c.KernelGatewayApp.allow_credentials = True" >> /root/.jupyter/jupyter_kernel_gateway_config.py && \\
-    echo "c.JupyterWebsocketPersonality.list_kernels = True" >> /root/.jupyter/jupyter_kernel_gateway_config.py && \\
-    echo "c.KernelGatewayApp.auth_token = ''" >> /root/.jupyter/jupyter_kernel_gateway_config.py
-
-# Start Jupyter Kernel Gateway
-CMD ["jupyter", "kernelgateway", "--ip=0.0.0.0", "--port=8888", "--no-auth"]
+CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatewayApp.port=8888", "--KernelGatewayApp.allow_origin='*'"]
 """
 
     @classmethod
-    def setup(cls, image_name=None, force_rebuild=False):
+    def setup(cls, force_rebuild=False):
         """
         Build the Docker image needed for execution.
         This only needs to be done once per session.
         
         Args:
             image_name (str, optional): Custom name for the Docker image
+            dockerfile_path (str, optional): Path to the Dockerfile to use
             force_rebuild (bool, optional): Force rebuilding the image even if it exists
         """
-        if cls._image_built and not force_rebuild:
+        if not force_rebuild:
             return
-            
-        if image_name:
-            cls._image_name = image_name
             
         try:
             # Check if Docker is available
@@ -90,23 +76,14 @@ CMD ["jupyter", "kernelgateway", "--ip=0.0.0.0", "--port=8888", "--no-auth"]
             
             # Check if the image already exists
             try:
-                if force_rebuild:
-                    print(f"Force rebuilding Docker image '{cls._image_name}'...")
-                    # Try to remove the existing image
-                    try:
-                        client.images.remove(cls._image_name, force=True)
-                        print(f"Removed existing image '{cls._image_name}'")
-                    except:
-                        pass
-                else:
-                    client.images.get(cls._image_name)
-                    cls._image_built = True
-                    print(f"Docker image '{cls._image_name}' already exists.")
-                    return
-            except ImageNotFound:
+                print(f"Force rebuilding Docker image '{cls._image_name}'...")
+                # Try to remove the existing image
+                client.images.remove(cls._image_name, force=True)
+                print(f"Removed existing image '{cls._image_name}'")
+            except Exception as e:
                 # Image doesn't exist, we'll build it
                 pass
-                
+
             # Create a temporary directory to build the Docker image
             with tempfile.TemporaryDirectory() as temp_dir:
                 # Create Dockerfile
@@ -122,7 +99,6 @@ CMD ["jupyter", "kernelgateway", "--ip=0.0.0.0", "--port=8888", "--no-auth"]
                     rm=True
                 )
                 
-            cls._image_built = True
             print(f"Docker image '{cls._image_name}' built successfully.")
                 
         except DockerException as e:
@@ -144,29 +120,29 @@ CMD ["jupyter", "kernelgateway", "--ip=0.0.0.0", "--port=8888", "--no-auth"]
         Returns:
             int: Available port number
         """
-        # First check ports that are not in our used_ports set
-        for port in range(start_port, end_port):
-            if port in DockerExecutor._used_ports:
-                continue
-                
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                try:
-                    s.bind((host, port))
-                    DockerExecutor._used_ports.add(port)
-                    return port
-                except socket.error:
+        # Acquire lock to prevent concurrent access to the port selection
+        with DockerExecutor._port_lock:
+            # First check ports that are not in our used_ports set
+            for port in range(start_port, end_port):
+                if port in DockerExecutor._used_ports:
                     continue
-        
-        raise RuntimeError(f"No free ports available in range {start_port}-{end_port}")
+                    
+                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                    try:
+                        s.bind((host, port))
+                        DockerExecutor._used_ports.add(port)
+                        return port
+                    except socket.error:
+                        continue
+            
+            raise RuntimeError(f"No free ports available in range {start_port}-{end_port}")
     
     def __init__(
         self,
-        additional_authorized_imports: List[str],
+        additional_authorized_imports: List[str] = [],
         logger=None,
         max_print_outputs_length: Optional[int] = None,
-        image_name: str = None,
         host: str = "127.0.0.1",
-        port: int = 0,  # 0 means auto-assign port
         **kwargs
     ):
         """
@@ -176,9 +152,7 @@ CMD ["jupyter", "kernelgateway", "--ip=0.0.0.0", "--port=8888", "--no-auth"]
             additional_authorized_imports (List[str]): Additional allowed packages
             logger: Logger for reporting status
             max_print_outputs_length (int, optional): Maximum length of print outputs
-            image_name (str, optional): Custom Docker image name
             host (str, optional): Host to bind the container port to
-            port (int, optional): Port to use for Jupyter (0 for auto-assignment)
         """
         self.logger = logger
         self.custom_tools = {}
@@ -189,35 +163,16 @@ CMD ["jupyter", "kernelgateway", "--ip=0.0.0.0", "--port=8888", "--no-auth"]
         self.static_tools = None
         
         # Docker-specific configuration
-        self.image_name = image_name or self._image_name
         self.host = host
         
         # Assign a port if not explicitly provided
-        if port == 0:
-            self.port = self.find_free_port(host)
-            if self.logger:
-                self.logger.log(f"Auto-assigned port {self.port}")
-        else:
-            # If port is explicitly provided, check if it's available
-            if port in self._used_ports:
-                raise ValueError(f"Port {port} is already in use by another DockerExecutor")
-                
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                try:
-                    s.bind((host, port))
-                    self._used_ports.add(port)
-                    self.port = port
-                except socket.error:
-                    raise ValueError(f"Port {port} is already in use by another process")
+        self.port = self.find_free_port(host)
+        print(f"Auto-assigned port {self.port}")
         
         self.container = None
         self.kernel_id = None
         self.ws = None
         self.final_answer_pattern = re.compile(r"final_answer\((.*)\)", re.DOTALL)
-        
-        # Ensure image is built
-        if not self._image_built:
-            self.setup(image_name=self.image_name)
             
         # Initialize Docker client and start container
         try:
@@ -231,23 +186,16 @@ CMD ["jupyter", "kernelgateway", "--ip=0.0.0.0", "--port=8888", "--no-auth"]
     def _start_container(self):
         """Start the persistent Docker container with Jupyter kernel."""
         try:
-            if self.logger:
-                self.logger.log(f"Starting container on {self.host}:{self.port}...", level=1)
-            
+            print(f"Starting container on {self.host}:{self.port}...")
             print(f"Docker version: {self.client.version()}")
                 
             # Launch container
             self.container = self.client.containers.run(
-                self.image_name,
+                self._image_name,
                 ports={f"8888/tcp": (self.host, self.port)},
                 detach=True,
-                name=f"jupyter-kernel-{self.port}-{uuid.uuid4().hex[:6]}",  # Unique name to avoid conflicts
-                environment={
-                    "JUPYTER_ALLOW_INSECURE_WRITES": "1",  # Allow insecure writes
-                    "JUPYTER_ALLOW_ORIGIN": "*",
-                    "JUPYTER_TOKEN": "",
-                    "JUPYTER_PASSWORD": ""
-                }
+                name=f"jupyter-kernel-{self.port}-{uuid.uuid4().hex[:6]}"  # Unique name to avoid conflicts
+
             )
             
             # Wait for container to be ready
@@ -262,95 +210,60 @@ CMD ["jupyter", "kernelgateway", "--ip=0.0.0.0", "--port=8888", "--no-auth"]
                 
             if self.container.status != "running":
                 raise RuntimeError(f"Container failed to start: {self.container.status}")
-                
-            # Wait for Jupyter to be ready
-            retries = 0
-            max_retries = 30  # Increased from 10
-            print(f"Waiting for Jupyter kernel gateway on {self.host}:{self.port}")
-            
-            while retries < max_retries:
+
+            # Verify container is responsive by polling the /api endpoint
+            base_url = f"http://{self.host}:{self.port}"
+            api_url = f"{base_url}/api"
+            http_retries = 0
+            max_http_retries = 20
+            while http_retries < max_http_retries:
                 try:
-                    url = f"http://{self.host}:{self.port}/api/kernels"
-                    print(f"Trying to connect to {url}...")
-                    response = requests.get(url, timeout=2)
-                    print(f"Response status: {response.status_code}")
-                    print(f"Response content: {response.text[:100]}...")
-                    
+                    response = requests.get(api_url)
                     if response.status_code == 200:
-                        print(f"Successfully connected to Jupyter at {self.host}:{self.port}")
+                        print("Container is responsive.")
                         break
                 except Exception as e:
-                    if retries % 5 == 0:  # Only log every 5th retry to reduce verbosity
-                        print(f"Waiting for Jupyter to be ready (attempt {retries+1}/{max_retries}): {str(e)}")
-                        # Get container logs for debugging
-                        logs = self.container.logs().decode('utf-8')
-                        print(f"Container logs: {logs[-500:]}")
-                        if self.logger:
-                            self.logger.log(f"Container logs: {logs[-500:]}", level=1)  # Last 500 chars of logs
-                time.sleep(2)  # Increased from 1
-                retries += 1
-                
-            if retries >= max_retries:
-                logs = self.container.logs().decode('utf-8')
-                error_msg = f"Jupyter kernel gateway failed to start. Container logs: {logs[-1000:]}"
-                raise RuntimeError(error_msg)
-                
-            # Create a new kernel
-            print(f"Creating kernel...")
-            kernel_url = f"http://{self.host}:{self.port}/api/kernels"
-            print(f"POST request to {kernel_url}")
-            response = requests.post(kernel_url, timeout=5)
-            print(f"Kernel creation response status: {response.status_code}")
-            print(f"Kernel creation response text: {response.text}")
-            
+                    print(f"Waiting for container to become responsive... ({e})")
+                time.sleep(1)
+                http_retries += 1
+            else:
+                raise RuntimeError("Container did not become responsive in time.")
+
+            # Create a new kernel by POSTing to /api/kernels
+            kernel_url = f"{base_url}/api/kernels"
+            response = requests.post(kernel_url)
+            print(f"Kernel response: {response.status_code} {response.text}")
             if response.status_code != 201:
-                raise RuntimeError(f"Failed to create kernel: {response.text}")
-                
-            # Store the kernel ID and connect to websocket
-            kernel_data = response.json()
-            self.kernel_id = kernel_data["id"]
-            print(f"Created kernel with ID: {self.kernel_id}")
-            
+                raise RuntimeError(f"Failed to create kernel: {response.status_code} {response.text}")
+            kernel_info = response.json()
+            self.kernel_id = kernel_info.get("id")
+            print(f"Kernel created with ID: {self.kernel_id}")
+
+            # Construct and store the WebSocket URL for kernel channels
             self.ws_url = f"ws://{self.host}:{self.port}/api/kernels/{self.kernel_id}/channels"
-            print(f"Connecting to WebSocket at {self.ws_url}")
+            print(f"WebSocket URL: {self.ws_url}")
             
-            # Connect with retry
-            ws_retries = 0
-            max_ws_retries = 5
-            while ws_retries < max_ws_retries:
-                try:
-                    self.ws = create_connection(self.ws_url, timeout=10)
-                    print(f"Successfully connected to WebSocket")
-                    break
-                except Exception as ws_e:
-                    print(f"WebSocket connection attempt {ws_retries+1}/{max_ws_retries} failed: {str(ws_e)}")
-                    ws_retries += 1
-                    time.sleep(2)
-            
-            if ws_retries >= max_ws_retries:
-                raise RuntimeError(f"Failed to connect to WebSocket after {max_ws_retries} attempts")
-            
-            if self.logger:
-                self.logger.log(f"Connected to Jupyter kernel {self.kernel_id} in container {self.container.short_id}", level=1)
-                
-            # Install additional packages
-            if self.additional_authorized_imports:
+            # Create WebSocket connection
+            self.ws = websocket.create_connection(self.ws_url)
+            print("WebSocket connection established.")
+
+            # Install additional authorized imports (packages) via pip inside the container
+            if getattr(self, "additional_authorized_imports", None):
                 packages = " ".join(self.additional_authorized_imports)
-                print(f"Installing packages: {packages}")
-                self._execute_code(f"!pip install {packages}")
+                exec_command = f"pip install {packages}"
+                print(f"Installing additional packages: {packages}")
+                exit_code, output = self.container.exec_run(exec_command)
+                if exit_code != 0:
+                    raise RuntimeError(f"Failed to install packages: {output.decode('utf-8')}")
+                print("Additional packages installed.")
+            
                 
         except Exception as e:
             # Get container logs if available
-            logs = ""
-            if hasattr(self, 'container') and self.container:
-                try:
-                    logs = self.container.logs().decode('utf-8')
-                    logs = f"\nContainer logs: {logs[-1000:]}"  # Last 1000 chars of logs
-                except:
-                    pass
+            print(f"Error starting container: {e}")
             
             self.cleanup()
-            raise RuntimeError(f"Failed to start Jupyter kernel: {e}{logs}") from e
+            raise RuntimeError(f"Failed to start Jupyter kernel: {e}") from e
 
     def _execute_code(self, code: str) -> Tuple[Any, str]:
         """
@@ -363,7 +276,7 @@ CMD ["jupyter", "kernelgateway", "--ip=0.0.0.0", "--port=8888", "--no-auth"]
             Tuple[Any, str]: (result, output)
         """
         if not self.ws or not self.kernel_id:
-            self._start_container()
+            raise RuntimeError("Container with kernel not started")
             
         # Generate a unique message ID
         msg_id = str(uuid.uuid4())
@@ -577,8 +490,10 @@ def {name}(*args, **kwargs):
                 self.container = None
                 
             # Release the port
-            if hasattr(self, 'port') and self.port and self.port in self._used_ports:
-                self._used_ports.remove(self.port)
+            if hasattr(self, 'port') and self.port:
+                with DockerExecutor._port_lock:
+                    if self.port in self._used_ports:
+                        self._used_ports.remove(self.port)
                 
             if self.logger:
                 self.logger.log("DockerExecutor cleanup completed", level=1)
