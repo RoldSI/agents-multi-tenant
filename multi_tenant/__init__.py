@@ -8,14 +8,12 @@ Multi-tenant agent framework for smolagents.
 import os
 from typing import Dict, List, Any, Optional, Union
 from smolagents import CodeAgent, OpenAIServerModel
-
-from .base import TOOLS_DIR
-from .docker_utils import check_docker_available, get_docker_config, test_docker_setup
+from smolagents.tools import Tool
 
 
 def run_query(
     query: str,
-    use_docker: bool = False
+    tools: List[Tool]
 ) -> str:
     """
     Execute a query using specified tools and LLM.
@@ -56,7 +54,5 @@ def run_query(
 
 # Export public API
 __all__ = [
-    'check_docker_available',
-    'test_docker_setup',
     'run_query'
 ] 

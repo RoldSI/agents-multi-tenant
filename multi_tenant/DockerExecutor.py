@@ -14,6 +14,8 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import docker
 import requests
 from docker.errors import DockerException, ImageNotFound
+from smolagents.tool_validation import validate_tool_attributes
+from smolagents.utils import instance_to_source
 from websocket import create_connection
 
 from smolagents.local_python_executor import BASE_BUILTIN_MODULES, PythonExecutor, DEFAULT_MAX_LEN_OUTPUT
@@ -299,7 +301,7 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
         # Generate a unique message ID
         msg_id = str(uuid.uuid4())
 
-        print(f"Executing code: {code}")
+        # print(f"Executing code: {code}")
         
         # Create execute request
         execute_request = {
@@ -435,6 +437,19 @@ locals().update(vars_dict)
 """
         self._execute_code(code)
     
+    # def _get_tools_definition_code(tools: Dict[str, Tool]) -> str:
+    #     tool_codes = []
+    #     for tool in tools.values():
+    #         validate_tool_attributes(tool.__class__, check_imports=False)
+    #         tool_code = instance_to_source(tool, base_cls=Tool)
+    #         # tool_code = tool_code.replace("from smolagents.tools import Tool", "")
+    #         # tool_code += f"\n\n{tool.name} = {tool.__class__.__name__}()\n"
+    #         tool_codes.append(tool_code)
+
+    #     tool_definition_code = "\n".join([f"import {module}" for module in BASE_BUILTIN_MODULES])
+    #     tool_definition_code += "\n\n".join(tool_codes)
+    #     return tool_definition_code
+    
     def send_tools(self, tools: Dict[str, Tool]):
         """
         Set the tools available to the code by defining them in the kernel.
@@ -453,16 +468,21 @@ locals().update(vars_dict)
         if not self.kernel_id and tools:
             raise RuntimeError("Kernel not started")
 
-        tool_definition_code = get_tools_definition_code(tools)
-
+        # tool_definition_code = get_tools_definition_code(tools)
+        tool_definition_codes = set()
         packages_to_install = set()
+        packages_to_install.add("smolagents")
+
         for tool in tools.values():
-            # print(f"Tool: {tool}, requirements: {tool.to_dict()['requirements']}")
+            # Encode the tool using pickle and base64 for secure transmission
+            tool_code = tool.to_dict()["code"]
+            tool_code += f"\n{tool.name} = {tool.__class__.__name__}()"
+            tool_definition_codes.add(tool_code)
             for package in tool.to_dict()["requirements"]:
                 packages_to_install.add(package)
 
         self._execute_code(
-            f"!pip install {' '.join(packages_to_install)}\n" + tool_definition_code
+            f"!pip install {' '.join(packages_to_install)}\n{'\n'.join(tool_definition_codes)}"
         )
     
     def cleanup(self):

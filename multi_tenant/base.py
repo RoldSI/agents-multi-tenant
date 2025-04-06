@@ -1,230 +1,103 @@
 #!/usr/bin/env python
-# coding=utf-8
 
 """
 Base utility functions and configurations for the multi-tenant agent framework.
 """
 
-import os
 import json
-import uuid
-import importlib
-import inspect
 import ast
-import sys
+import inspect
+import textwrap
+import types
 from typing import Dict, List, Any, Optional, Union, Type
 
-# Constants
-TOOLS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'tools')
-
-# Make sure tools directory exists
-os.makedirs(TOOLS_DIR, exist_ok=True)
-
-# Utility functions
-def generate_id(prefix: str = '') -> str:
-    """Generate a random UUID with an optional prefix."""
-    return f"{prefix}{uuid.uuid4().hex}"
-
-def validate_dependencies(dependencies: List[str]) -> List[str]:
-    """Validate and normalize dependencies list."""
-    if not isinstance(dependencies, list):
-        raise ValueError("Dependencies must be a list of strings")
-    
-    # Ensure all dependencies are strings and not empty
-    validated = []
-    for dep in dependencies:
-        if not isinstance(dep, str):
-            raise ValueError(f"Dependency {dep} is not a string")
-        if not dep.strip():
-            continue
-        validated.append(dep.strip())
-    
-    return validated
-
-def is_valid_smolagents_tool(tool_code: str) -> bool:
-    """
-    Analyze the code to check if it defines a function that can be converted
-    to a valid smolagents Tool.
-    """
-    try:
-        # Parse the code to find function definitions
-        tree = ast.parse(tool_code)
-        for node in ast.walk(tree):
-            if isinstance(node, ast.FunctionDef):
-                # Found a function, verify it has a docstring and parameters
-                docstring = ast.get_docstring(node)
-                if not docstring:
-                    return False
-                
-                # Function should have at least one parameter
-                if not node.args.args:
-                    return False
-                
-                # Check for type annotations
-                for arg in node.args.args:
-                    if arg.annotation is None and arg.arg != 'self':
-                        return False
-                
-                return True
-        
-        # No valid function found
-        return False
-    except SyntaxError:
-        # Invalid Python code
-        return False
+from smolagents.tools import Tool
+from smolagents._function_type_hints_utils import get_json_schema, TypeHintParsingException
 
 def function_to_tool_class(
-    function_code: str, 
-    name: str, 
-    description: str, 
-    dependencies: List[str]
-) -> str:
+    function_code: str
+) -> Tool:
     """
-    Convert a function to a smolagents Tool class.
+    Convert a string of a Python function into a Tool class instance.
     
     Args:
-        function_code: The function code as a string
-        name: The name of the tool
-        description: A description of what the tool does
-        dependencies: List of package dependencies
-    
+        function_code (str): String representation of a Python function.
+            The function should have type hints for each input and a type hint for the output.
+            It should also have a docstring including the description of the function
+            and an 'Args:' part where each argument is described.
+            
     Returns:
-        A string containing the Tool class code
+        Tool: An instance of a dynamically created Tool subclass.
     """
-    try:
-        # Parse the function to extract information
-        tree = ast.parse(function_code)
-        function_node = None
-        
-        # Find the function definition
-        for node in ast.walk(tree):
-            if isinstance(node, ast.FunctionDef):
-                function_node = node
-                break
-        
-        if function_node is None:
-            raise ValueError("No function definition found in code")
-        
-        # Get function name and parameters
-        func_name = function_node.name
-        
-        # Extract parameters and their types
-        parameters = []
-        for arg in function_node.args.args:
-            if arg.arg == 'self':
-                continue
-            
-            arg_name = arg.arg
-            arg_type = "Any"  # Default type
-            
-            # Extract type annotation if available
-            if arg.annotation:
-                if isinstance(arg.annotation, ast.Name):
-                    arg_type = arg.annotation.id
-                elif isinstance(arg.annotation, ast.Subscript):
-                    # Handle complex types like List[str]
-                    if isinstance(arg.annotation.value, ast.Name):
-                        arg_type = arg.annotation.value.id
-                        # TODO: Handle the subscript value if needed
-            
-            parameters.append((arg_name, arg_type))
-        
-        # Get docstring and extract parameter descriptions
-        docstring = ast.get_docstring(function_node)
-        param_descriptions = {}
-        
-        if docstring:
-            # Extract parameter descriptions from docstring
-            lines = docstring.split('\n')
-            in_args = False
-            current_param = None
-            
-            for line in lines:
-                line = line.strip()
-                if not in_args and line.lower().startswith('args:'):
-                    in_args = True
-                    continue
-                
-                if in_args:
-                    if line.startswith(':param') or line.startswith('@param'):
-                        # Handle :param style
-                        parts = line.split(':', 2) if ':' in line else line.split(' ', 2)
-                        if len(parts) >= 3:
-                            param_name = parts[1].strip().split(' ')[0]
-                            param_descriptions[param_name] = parts[2].strip()
-                    elif line and not line.startswith(':') and not line.startswith('@') and ':' in line:
-                        # Handle "param_name: description" style
-                        parts = line.split(':', 1)
-                        param_name = parts[0].strip()
-                        param_descriptions[param_name] = parts[1].strip()
-                    elif line.startswith(':') or line.startswith('@') or not line:
-                        # End of Args section
-                        in_args = False
-        
-        # Create the inputs dictionary for the Tool class
-        inputs_dict = {}
-        for param_name, param_type in parameters:
-            # Map Python types to smolagents types
-            type_mapping = {
-                'str': 'string',
-                'int': 'integer',
-                'float': 'number',
-                'bool': 'boolean',
-                'list': 'array',
-                'dict': 'object',
-                'Any': 'any',
-                'None': 'null',
-            }
-            
-            type_str = type_mapping.get(param_type, param_type)
-            
-            # Get description from docstring or use a default
-            param_desc = param_descriptions.get(param_name, f"Parameter {param_name}")
-            
-            inputs_dict[param_name] = {
-                "type": type_str,
-                "description": param_desc
-            }
-        
-        # Determine output type from return annotation if available
-        output_type = "string"  # Default output type
-        if function_node.returns:
-            if isinstance(function_node.returns, ast.Name):
-                return_type = function_node.returns.id
-                type_mapping = {
-                    'str': 'string',
-                    'int': 'integer',
-                    'float': 'number',
-                    'bool': 'boolean',
-                    'list': 'array',
-                    'dict': 'object',
-                    'Any': 'any',
-                    'None': 'null',
-                }
-                output_type = type_mapping.get(return_type, return_type)
-        
-        # Generate the Tool class code with the original function included
-        # and the forward method simply calling the original function
-        class_code = f"""
-from smolagents import Tool
-from typing import Any, Dict, List, Optional, Union
-
-{function_code}
-
-class {name.capitalize()}Tool(Tool):
-    name = "{name}"
-    description = "{description}"
-    inputs = {json.dumps(inputs_dict, indent=4)}
-    output_type = "{output_type}"
+    # Create a temporary module to execute the function code
+    temp_module = types.ModuleType('temp_function_module')
     
-    def forward(self, {', '.join(f'{name}: {type_}' for name, type_ in parameters)}):
-        return {func_name}({', '.join(name for name, _ in parameters)})
-
-# Create an instance of the tool
-{name}_tool = {name.capitalize()}Tool()
-"""
-        
-        return class_code
+    # Execute the function code in the module's namespace
+    exec(function_code, temp_module.__dict__)
     
-    except Exception as e:
-        raise ValueError(f"Failed to convert function to Tool class: {str(e)}") 
+    # Find the function in the module
+    function_objects = [obj for name, obj in inspect.getmembers(temp_module) 
+                       if inspect.isfunction(obj) and name != '<lambda>']
+    
+    if not function_objects:
+        raise ValueError("No function found in the provided code string.")
+    
+    # Use the first function found
+    tool_function = function_objects[0]
+    
+    # Get the function's schema
+    tool_json_schema = get_json_schema(tool_function)["function"]
+    if "return" not in tool_json_schema:
+        raise TypeHintParsingException("Tool return type not found: make sure your function has a return type hint!")
+
+    # Create a SimpleTool class
+    class SimpleTool(Tool):
+        def __init__(self):
+            self.is_initialized = True
+
+    # Set the class attributes
+    SimpleTool.name = tool_json_schema["name"]
+    SimpleTool.description = tool_json_schema["description"]
+    SimpleTool.inputs = tool_json_schema["parameters"]["properties"]
+    SimpleTool.output_type = tool_json_schema["return"]["type"]
+    
+    # Bind the tool function to the forward method
+    SimpleTool.forward = staticmethod(tool_function)
+
+    # Get the signature parameters of the tool function
+    sig = inspect.signature(tool_function)
+    
+    # Add "self" as first parameter to tool_function signature
+    new_sig = sig.replace(
+        parameters=[inspect.Parameter("self", inspect.Parameter.POSITIONAL_OR_KEYWORD)] + list(sig.parameters.values())
+    )
+    
+    # Set the signature of the forward method
+    SimpleTool.forward.__signature__ = new_sig
+
+    # Create the forward method source, including def line and indentation
+    tool_source_body = "\n".join(function_code.split("\n")[1:])
+    tool_source_body = textwrap.dedent(tool_source_body)
+    forward_method_source = f"def forward{str(new_sig)}:\n{textwrap.indent(tool_source_body, '    ')}"
+    
+    # Create the class source
+    class_source = (
+        textwrap.dedent(f'''
+        class SimpleTool(Tool):
+            name: str = "{tool_json_schema["name"]}"
+            description: str = {json.dumps(textwrap.dedent(tool_json_schema["description"]).strip())}
+            inputs: dict[str, dict[str, str]] = {tool_json_schema["parameters"]["properties"]}
+            output_type: str = "{tool_json_schema["return"]["type"]}"
+
+            def __init__(self):
+                self.is_initialized = True
+
+        ''')
+        + textwrap.indent(forward_method_source, "    ")  # indent for class method
+    )
+    
+    # Store the source code on both class and method for inspection
+    SimpleTool.__source__ = class_source
+    SimpleTool.forward.__source__ = forward_method_source
+
+    return SimpleTool()

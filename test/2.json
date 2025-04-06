@@ -1,0 +1,6 @@
+[
+  {
+    "tools": "def fibonacci(n: int) -> int:\n    \"\"\"\n    Calculate the nth Fibonacci number\n    \n    Args:\n        n: The position in the Fibonacci sequence (starting from 0)\n        \n    Returns:\n        int: The nth Fibonacci number\n    \"\"\"\n    if n <= 0:\n        return 0\n    elif n == 1:\n        return 1\n    else:\n        a, b = 0, 1\n        for _ in range(2, n + 1):\n            a, b = b, a + b\n        return b",
+    "query": "What's the 10th Fibonacci number?"
+  }
+]
