@@ -1,4 +1,6 @@
+import base64
 import json
+import pickle
 import re
 import socket
 import tempfile
@@ -15,7 +17,7 @@ from docker.errors import DockerException, ImageNotFound
 from websocket import create_connection
 
 from smolagents.local_python_executor import BASE_BUILTIN_MODULES, PythonExecutor, DEFAULT_MAX_LEN_OUTPUT
-from smolagents.tools import Tool
+from smolagents.tools import Tool, get_tools_definition_code
 import websocket
 
 
@@ -156,23 +158,23 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
         """
         self.logger = logger
         self.custom_tools = {}
-        self.state = {"_print_outputs": ""}
         self.max_print_outputs_length = max_print_outputs_length or DEFAULT_MAX_LEN_OUTPUT
         self.additional_authorized_imports = additional_authorized_imports
         self.authorized_imports = list(set(BASE_BUILTIN_MODULES) | set(self.additional_authorized_imports))
-        self.static_tools = None
         
         # Docker-specific configuration
         self.host = host
         
         # Assign a port if not explicitly provided
         self.port = self.find_free_port(host)
-        print(f"Auto-assigned port {self.port}")
+        if self.logger:
+            self.logger.log(f"Auto-assigned port {self.port}", level="debug")
         
         self.container = None
         self.kernel_id = None
         self.ws = None
-        self.final_answer_pattern = re.compile(r"final_answer\((.*)\)", re.DOTALL)
+        # Use the same regex pattern as in remote_executors.py
+        self.final_answer_pattern = re.compile(r"^final_answer\((.*)\)$", re.M)
             
         # Initialize Docker client and start container
         try:
@@ -186,8 +188,11 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
     def _start_container(self):
         """Start the persistent Docker container with Jupyter kernel."""
         try:
-            print(f"Starting container on {self.host}:{self.port}...")
-            print(f"Docker version: {self.client.version()}")
+            if self.logger:
+                self.logger.log(f"Starting container on {self.host}:{self.port}...", level="info")
+            
+            if self.logger:
+                self.logger.log(f"Docker version: {self.client.version()}", level="debug")
                 
             # Launch container
             self.container = self.client.containers.run(
@@ -220,10 +225,12 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
                 try:
                     response = requests.get(api_url)
                     if response.status_code == 200:
-                        print("Container is responsive.")
+                        if self.logger:
+                            self.logger.log("Container is responsive.", level="debug")
                         break
                 except Exception as e:
-                    print(f"Waiting for container to become responsive... ({e})")
+                    if self.logger:
+                        self.logger.log(f"Waiting for container to become responsive... ({e})", level="debug")
                 time.sleep(1)
                 http_retries += 1
             else:
@@ -232,35 +239,46 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
             # Create a new kernel by POSTing to /api/kernels
             kernel_url = f"{base_url}/api/kernels"
             response = requests.post(kernel_url)
-            print(f"Kernel response: {response.status_code} {response.text}")
+            if self.logger:
+                self.logger.log(f"Kernel response: {response.status_code} {response.text}", level="debug")
+                
             if response.status_code != 201:
                 raise RuntimeError(f"Failed to create kernel: {response.status_code} {response.text}")
             kernel_info = response.json()
             self.kernel_id = kernel_info.get("id")
-            print(f"Kernel created with ID: {self.kernel_id}")
+            if self.logger:
+                self.logger.log(f"Kernel created with ID: {self.kernel_id}", level="debug")
 
             # Construct and store the WebSocket URL for kernel channels
             self.ws_url = f"ws://{self.host}:{self.port}/api/kernels/{self.kernel_id}/channels"
-            print(f"WebSocket URL: {self.ws_url}")
+            if self.logger:
+                self.logger.log(f"WebSocket URL: {self.ws_url}", level="debug")
             
             # Create WebSocket connection
             self.ws = websocket.create_connection(self.ws_url)
-            print("WebSocket connection established.")
+            if self.logger:
+                self.logger.log("WebSocket connection established.", level="debug")
 
             # Install additional authorized imports (packages) via pip inside the container
             if getattr(self, "additional_authorized_imports", None):
                 packages = " ".join(self.additional_authorized_imports)
                 exec_command = f"pip install {packages}"
-                print(f"Installing additional packages: {packages}")
+                
+                if self.logger:
+                    self.logger.log(f"Installing additional packages: {packages}", level="info")
+                    
                 exit_code, output = self.container.exec_run(exec_command)
                 if exit_code != 0:
                     raise RuntimeError(f"Failed to install packages: {output.decode('utf-8')}")
-                print("Additional packages installed.")
-            
+                    
+                if self.logger:
+                    self.logger.log("Additional packages installed.", level="debug")
+             
                 
         except Exception as e:
             # Get container logs if available
-            print(f"Error starting container: {e}")
+            if self.logger:
+                self.logger.log_error(f"Error starting container: {e}")
             
             self.cleanup()
             raise RuntimeError(f"Failed to start Jupyter kernel: {e}") from e
@@ -280,6 +298,8 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
             
         # Generate a unique message ID
         msg_id = str(uuid.uuid4())
+
+        print(f"Executing code: {code}")
         
         # Create execute request
         execute_request = {
@@ -360,59 +380,40 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
             # Check if this is a final answer
             is_final_answer = bool(self.final_answer_pattern.search(code_action))
             final_answer_value = None
-            
-            # If we have tools or state, set them up in the kernel
-            if self.state:
-                state_code = f"""
-# Set up state
-state = {repr(self.state)}
-locals().update(state)
-"""
-                self._execute_code(state_code)
+            output = ""
                 
-            # Execute the main code
             if is_final_answer:
-                # Extract the code before final_answer
+                # Extract the code before final_answer and the final answer expression
                 match = self.final_answer_pattern.search(code_action)
                 pre_final_answer_code = code_action[:match.start()].strip()
                 final_answer_expr = match.group(1).strip()
                 
-                # Execute the code first
+                # Execute any code that comes before the final_answer call
                 if pre_final_answer_code:
-                    self._execute_code(pre_final_answer_code)
-                    
-                # Then evaluate the final answer expression
-                result, output = self._execute_code(f"print(repr({final_answer_expr}))")
-                final_answer_value = eval(output.strip())
+                    _, pre_output = self._execute_code(pre_final_answer_code)
+                    output += pre_output
+                
+                # Evaluate the final answer expression with the executor
+                _, expr_output = self._execute_code(f"print(repr({final_answer_expr}))")
+                output += expr_output
+                
+                # Extract the evaluated result
+                try:
+                    # Get the last line which should contain our result
+                    result_line = expr_output.strip().split('\n')[-1]
+                    final_answer_value = eval(result_line)
+                except Exception as e:
+                    # If evaluation fails, log the error and use the expression as is
+                    if self.logger:
+                        self.logger.log_error(f"Failed to evaluate final answer: {str(e)}")
+                    final_answer_value = final_answer_expr
             else:
+                # Regular code execution
                 result, output = self._execute_code(code_action)
             
-            # After execution, retrieve any updated state variables
-            state_result, _ = self._execute_code("""
-# Get updated state
-import json
-print(json.dumps({key: repr(value) for key, value in locals().items() 
-                 if not key.startswith('_') and key != 'get_ipython'}))
-""")
-            
-            try:
-                # Update state with variables from the kernel
-                updated_state = json.loads(state_result)
-                for key, value_repr in updated_state.items():
-                    try:
-                        # Convert repr back to Python object
-                        self.state[key] = eval(value_repr)
-                    except:
-                        pass
-            except:
-                pass
-                
-            # Update print outputs
-            self.state["_print_outputs"] = output
-            
-            # Truncate if needed
-            if len(self.state["_print_outputs"]) > self.max_print_outputs_length:
-                self.state["_print_outputs"] = self.state["_print_outputs"][:self.max_print_outputs_length] + "\n... (truncated)"
+            # Truncate output if needed
+            if len(output) > self.max_print_outputs_length:
+                output = output[:self.max_print_outputs_length] + "\n... (truncated)"
             
             return final_answer_value if is_final_answer else result, output, is_final_answer
             
@@ -420,52 +421,49 @@ print(json.dumps({key: repr(value) for key, value in locals().items()
             error_message = f"Error executing code in Docker: {str(e)}"
             if self.logger:
                 self.logger.log_error(error_message)
-            self.state["_print_outputs"] = error_message
             raise
 
     def send_variables(self, variables: dict):
         """
-        Update the state with new variables.
-        
-        Args:
-            variables (dict): Variables to add to the state
+        Send variables to the kernel namespace using pickle.
         """
-        self.state.update(variables)
-        
-        # If we have an active kernel, send the variables there too
-        if self.kernel_id:
-            var_code = []
-            for name, value in variables.items():
-                var_code.append(f"{name} = {repr(value)}")
-            
-            if var_code:
-                self._execute_code("\n".join(var_code))
+        pickled_vars = base64.b64encode(pickle.dumps(variables)).decode()
+        code = f"""
+import pickle, base64
+vars_dict = pickle.loads(base64.b64decode('{pickled_vars}'))
+locals().update(vars_dict)
+"""
+        self._execute_code(code)
     
     def send_tools(self, tools: Dict[str, Tool]):
         """
-        Set the tools available to the code.
+        Set the tools available to the code by defining them in the kernel.
+        
+        This method installs any required packages for the tools and then
+        defines the tool functions in the kernel's namespace.
         
         Args:
-            tools (Dict[str, Tool]): Tools available to the code
-        """
-        self.static_tools = tools
+            tools (Dict[str, Tool]): Dictionary mapping tool names to Tool objects
+                                     that will be made available to the code running
+                                     in the container.
         
-        # Send tool definitions to kernel
-        if self.kernel_id and tools:
-            # For real tool implementation in a kernel, we would need more complex
-            # serialization. This is a simplified version that just makes tool
-            # names available as dummy functions.
-            tool_code = []
-            for name in tools:
-                tool_code.append(f"""
-def {name}(*args, **kwargs):
-    print(f"Tool '{name}' was called with args={{args}} and kwargs={{kwargs}}")
-    print("Note: Tools cannot be directly executed in the Docker container.")
-    return f"({name} called)"
-""")
-            
-            if tool_code:
-                self._execute_code("\n".join(tool_code))
+        Raises:
+            RuntimeError: If the kernel is not started when tools are provided
+        """
+        if not self.kernel_id and tools:
+            raise RuntimeError("Kernel not started")
+
+        tool_definition_code = get_tools_definition_code(tools)
+
+        packages_to_install = set()
+        for tool in tools.values():
+            # print(f"Tool: {tool}, requirements: {tool.to_dict()['requirements']}")
+            for package in tool.to_dict()["requirements"]:
+                packages_to_install.add(package)
+
+        self._execute_code(
+            f"!pip install {' '.join(packages_to_install)}\n" + tool_definition_code
+        )
     
     def cleanup(self):
         """
