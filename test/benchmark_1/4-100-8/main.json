@@ -1,0 +1,715 @@
+{
+  "run_id": "20250409_182951",
+  "rate": 4.0,
+  "repeat_count": 100,
+  "start_time": 1744216191.467607,
+  "end_time": 1744216830.6904268,
+  "total_duration": 639.2228198051453,
+  "tasks": [
+    {
+      "task_id": 2,
+      "run_id": "20250409_182951_2",
+      "duration": 88.54244089126587,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 4,
+      "run_id": "20250409_182951_4",
+      "duration": 98.05948495864868,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 1,
+      "run_id": "20250409_182951_1",
+      "duration": 103.84595084190369,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 3,
+      "run_id": "20250409_182951_3",
+      "duration": 106.25049591064453,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 5,
+      "run_id": "20250409_182951_5",
+      "duration": 111.97863125801086,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 7,
+      "run_id": "20250409_182951_7",
+      "duration": 116.20987868309021,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 0,
+      "run_id": "20250409_182951_0",
+      "duration": 119.92814922332764,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 8,
+      "run_id": "20250409_182951_8",
+      "duration": 142.7791612148285,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 9,
+      "run_id": "20250409_182951_9",
+      "duration": 160.3526268005371,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 6,
+      "run_id": "20250409_182951_6",
+      "duration": 161.5179250240326,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 11,
+      "run_id": "20250409_182951_11",
+      "duration": 166.3785469532013,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 13,
+      "run_id": "20250409_182951_13",
+      "duration": 174.7126500606537,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 12,
+      "run_id": "20250409_182951_12",
+      "duration": 184.48925805091858,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 10,
+      "run_id": "20250409_182951_10",
+      "duration": 185.32672691345215,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 16,
+      "run_id": "20250409_182951_16",
+      "duration": 186.05655121803284,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 14,
+      "run_id": "20250409_182951_14",
+      "duration": 208.69707798957825,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 18,
+      "run_id": "20250409_182951_18",
+      "duration": 211.17548394203186,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 26,
+      "run_id": "20250409_182951_26",
+      "duration": 232.85090827941895,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 17,
+      "run_id": "20250409_182951_17",
+      "duration": 240.7307848930359,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 15,
+      "run_id": "20250409_182951_15",
+      "duration": 244.81842589378357,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 22,
+      "run_id": "20250409_182951_22",
+      "duration": 243.44417214393616,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 19,
+      "run_id": "20250409_182951_19",
+      "duration": 251.94683694839478,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 31,
+      "run_id": "20250409_182951_31",
+      "duration": 256.56870698928833,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 36,
+      "run_id": "20250409_182951_36",
+      "duration": 257.998566865921,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 78,
+      "run_id": "20250409_182951_78",
+      "duration": 247.37648582458496,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 20,
+      "run_id": "20250409_182951_20",
+      "duration": 268.4261739253998,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 29,
+      "run_id": "20250409_182951_29",
+      "duration": 268.70597100257874,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 37,
+      "run_id": "20250409_182951_37",
+      "duration": 267.1614580154419,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 23,
+      "run_id": "20250409_182951_23",
+      "duration": 273.21065497398376,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 25,
+      "run_id": "20250409_182951_25",
+      "duration": 273.75296998023987,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 30,
+      "run_id": "20250409_182951_30",
+      "duration": 289.90559482574463,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 28,
+      "run_id": "20250409_182951_28",
+      "duration": 294.9003059864044,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 32,
+      "run_id": "20250409_182951_32",
+      "duration": 294.14262080192566,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 33,
+      "run_id": "20250409_182951_33",
+      "duration": 304.5711028575897,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 41,
+      "run_id": "20250409_182951_41",
+      "duration": 304.4501130580902,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 98,
+      "run_id": "20250409_182951_98",
+      "duration": 301.65813875198364,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 21,
+      "run_id": "20250409_182951_21",
+      "duration": 327.53855895996094,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 27,
+      "run_id": "20250409_182951_27",
+      "duration": 326.65789103507996,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 59,
+      "run_id": "20250409_182951_59",
+      "duration": 319.0889389514923,
+      "success": false,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion.",
+      "error": "Error in generating model output:\nRequest timed out."
+    },
+    {
+      "task_id": 38,
+      "run_id": "20250409_182951_38",
+      "duration": 332.92574405670166,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 24,
+      "run_id": "20250409_182951_24",
+      "duration": 350.1084363460541,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 48,
+      "run_id": "20250409_182951_48",
+      "duration": 355.847736120224,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 99,
+      "run_id": "20250409_182951_99",
+      "duration": 347.3325870037079,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 35,
+      "run_id": "20250409_182951_35",
+      "duration": 365.3811776638031,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 34,
+      "run_id": "20250409_182951_34",
+      "duration": 372.9270873069763,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 65,
+      "run_id": "20250409_182951_65",
+      "duration": 367.40924310684204,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 72,
+      "run_id": "20250409_182951_72",
+      "duration": 382.3677387237549,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 73,
+      "run_id": "20250409_182951_73",
+      "duration": 388.7185580730438,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 89,
+      "run_id": "20250409_182951_89",
+      "duration": 385.0111072063446,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 44,
+      "run_id": "20250409_182951_44",
+      "duration": 408.7637219429016,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 85,
+      "run_id": "20250409_182951_85",
+      "duration": 400.4328382015228,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 45,
+      "run_id": "20250409_182951_45",
+      "duration": 415.28695607185364,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 53,
+      "run_id": "20250409_182951_53",
+      "duration": 416.47009205818176,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 83,
+      "run_id": "20250409_182951_83",
+      "duration": 411.3835971355438,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 43,
+      "run_id": "20250409_182951_43",
+      "duration": 423.83550000190735,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 60,
+      "run_id": "20250409_182951_60",
+      "duration": 425.3777160644531,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 61,
+      "run_id": "20250409_182951_61",
+      "duration": 437.10378408432007,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 69,
+      "run_id": "20250409_182951_69",
+      "duration": 437.00194573402405,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 96,
+      "run_id": "20250409_182951_96",
+      "duration": 431.17742109298706,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 88,
+      "run_id": "20250409_182951_88",
+      "duration": 437.88775277137756,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 79,
+      "run_id": "20250409_182951_79",
+      "duration": 440.22081208229065,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 97,
+      "run_id": "20250409_182951_97",
+      "duration": 439.9246919155121,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 49,
+      "run_id": "20250409_182951_49",
+      "duration": 454.50132298469543,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 58,
+      "run_id": "20250409_182951_58",
+      "duration": 452.81683921813965,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 47,
+      "run_id": "20250409_182951_47",
+      "duration": 460.2314450740814,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 57,
+      "run_id": "20250409_182951_57",
+      "duration": 460.1248052120209,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 42,
+      "run_id": "20250409_182951_42",
+      "duration": 489.49885511398315,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 66,
+      "run_id": "20250409_182951_66",
+      "duration": 485.4506742954254,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 77,
+      "run_id": "20250409_182951_77",
+      "duration": 485.3837239742279,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 51,
+      "run_id": "20250409_182951_51",
+      "duration": 498.2734498977661,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 46,
+      "run_id": "20250409_182951_46",
+      "duration": 500.56191897392273,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 52,
+      "run_id": "20250409_182951_52",
+      "duration": 521.5462820529938,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 92,
+      "run_id": "20250409_182951_92",
+      "duration": 513.4653749465942,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 39,
+      "run_id": "20250409_182951_39",
+      "duration": 528.6374568939209,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 62,
+      "run_id": "20250409_182951_62",
+      "duration": 523.1404399871826,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 94,
+      "run_id": "20250409_182951_94",
+      "duration": 517.6046359539032,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 50,
+      "run_id": "20250409_182951_50",
+      "duration": 531.4159278869629,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 76,
+      "run_id": "20250409_182951_76",
+      "duration": 529.597038269043,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 70,
+      "run_id": "20250409_182951_70",
+      "duration": 543.9393153190613,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 81,
+      "run_id": "20250409_182951_81",
+      "duration": 542.2847406864166,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 40,
+      "run_id": "20250409_182951_40",
+      "duration": 566.1466119289398,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 56,
+      "run_id": "20250409_182951_56",
+      "duration": 563.9644198417664,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 93,
+      "run_id": "20250409_182951_93",
+      "duration": 561.6861350536346,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 80,
+      "run_id": "20250409_182951_80",
+      "duration": 565.0511457920074,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 86,
+      "run_id": "20250409_182951_86",
+      "duration": 565.3510799407959,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 71,
+      "run_id": "20250409_182951_71",
+      "duration": 573.521742105484,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 74,
+      "run_id": "20250409_182951_74",
+      "duration": 580.9360771179199,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 55,
+      "run_id": "20250409_182951_55",
+      "duration": 588.3154139518738,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 82,
+      "run_id": "20250409_182951_82",
+      "duration": 582.5433659553528,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 67,
+      "run_id": "20250409_182951_67",
+      "duration": 590.6592462062836,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 91,
+      "run_id": "20250409_182951_91",
+      "duration": 584.5888860225677,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 95,
+      "run_id": "20250409_182951_95",
+      "duration": 585.5952978134155,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 68,
+      "run_id": "20250409_182951_68",
+      "duration": 594.6160550117493,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 75,
+      "run_id": "20250409_182951_75",
+      "duration": 597.1245656013489,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 63,
+      "run_id": "20250409_182951_63",
+      "duration": 610.7400000095367,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 90,
+      "run_id": "20250409_182951_90",
+      "duration": 607.9593620300293,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 54,
+      "run_id": "20250409_182951_54",
+      "duration": 619.1080820560455,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 87,
+      "run_id": "20250409_182951_87",
+      "duration": 612.7730257511139,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 64,
+      "run_id": "20250409_182951_64",
+      "duration": 620.5230448246002,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    },
+    {
+      "task_id": 84,
+      "run_id": "20250409_182951_84",
+      "duration": 617.3591606616974,
+      "success": true,
+      "query": "Please run the shallot function with any input and follow all instructions returned by each function until completion."
+    }
+  ],
+  "total_tasks": 100,
+  "unique_tasks": 1,
+  "successful_tasks": 99,
+  "failed_tasks": 1
+}

@@ -7,6 +7,7 @@ import tempfile
 import threading
 import time
 import uuid
+import os
 from pathlib import Path
 from textwrap import dedent
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -38,6 +39,7 @@ class DockerExecutor(PythonExecutor):
         image_name (str): Docker image name to use
         host (str): Host to bind container ports to
         port (int): Port to use for the container (0 for automatic assignment)
+        run_id (str, optional): Unique identifier for this executor instance to track metrics
     """
     
     _image_name = "jupyter-kernel-executor"
@@ -147,6 +149,7 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
         logger=None,
         max_print_outputs_length: Optional[int] = None,
         host: str = "127.0.0.1",
+        run_id: Optional[str] = None,
         **kwargs
     ):
         """
@@ -157,6 +160,7 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
             logger: Logger for reporting status
             max_print_outputs_length (int, optional): Maximum length of print outputs
             host (str, optional): Host to bind the container port to
+            run_id (str, optional): Unique identifier for tracking metrics
         """
         self.logger = logger
         self.custom_tools = {}
@@ -166,6 +170,15 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
         
         # Docker-specific configuration
         self.host = host
+        
+        # Performance tracking
+        self.run_id = run_id or str(uuid.uuid4())
+        self.metrics = {
+            "container_startup_time": 0,
+            "code_executions": [],
+            "total_execution_time": 0,
+            "num_executions": 0
+        }
         
         # Assign a port if not explicitly provided
         self.port = self.find_free_port(host)
@@ -187,8 +200,25 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
                 self.logger.log_error(f"Failed to connect to Docker: {str(e)}")
             raise RuntimeError("Could not connect to Docker daemon. Make sure Docker is running.") from e
 
+    def _save_metrics(self):
+        """Save performance metrics to a JSON file."""
+        if not self.run_id:
+            return
+            
+        # Create results directory if it doesn't exist
+        os.makedirs("test/results", exist_ok=True)
+        
+        # Save metrics to file
+        metrics_file = f"test/results/{self.run_id}.json"
+        with open(metrics_file, 'w') as f:
+            json.dump(self.metrics, f, indent=2)
+        
+        if self.logger:
+            self.logger.log(f"Metrics saved to {metrics_file}", level="debug")
+
     def _start_container(self):
         """Start the persistent Docker container with Jupyter kernel."""
+        start_time = time.time()
         try:
             if self.logger:
                 self.logger.log(f"Starting container on {self.host}:{self.port}...", level="info")
@@ -201,7 +231,7 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
                 self._image_name,
                 ports={f"8888/tcp": (self.host, self.port)},
                 detach=True,
-                name=f"jupyter-kernel-{self.port}-{uuid.uuid4().hex[:6]}"  # Unique name to avoid conflicts
+                name=f"jupyter-kernel-{self.port}-{self.run_id[:6]}"  # Use run_id in container name
 
             )
             
@@ -276,6 +306,15 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
                 if self.logger:
                     self.logger.log("Additional packages installed.", level="debug")
              
+            # Record container startup time
+            container_startup_time = time.time() - start_time
+            self.metrics["container_startup_time"] = container_startup_time
+            
+            if self.logger:
+                self.logger.log(f"Container startup took {container_startup_time:.2f} seconds", level="info")
+                
+            # Save initial metrics
+            self._save_metrics()
                 
         except Exception as e:
             # Get container logs if available
@@ -301,7 +340,8 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
         # Generate a unique message ID
         msg_id = str(uuid.uuid4())
 
-        # print(f"Executing code: {code}")
+        # Start timing
+        start_time = time.time()
         
         # Create execute request
         execute_request = {
@@ -365,6 +405,25 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
             except Exception as e:
                 outputs.append(f"Error receiving message: {str(e)}")
                 break
+        
+        # Record execution time
+        execution_time = time.time() - start_time
+        
+        # Update metrics
+        if self.run_id:
+            code_snippet = code[:50] + "..." if len(code) > 50 else code
+            execution_record = {
+                "time": execution_time,
+                "timestamp": time.time(),
+                "code_snippet": code_snippet,
+                "success": not any(line.startswith(("Exception", "Error")) for line in outputs)
+            }
+            self.metrics["code_executions"].append(execution_record)
+            self.metrics["total_execution_time"] += execution_time
+            self.metrics["num_executions"] += 1
+            
+            # Save updated metrics
+            self._save_metrics()
                 
         return result, "".join(outputs)
 
@@ -437,19 +496,6 @@ locals().update(vars_dict)
 """
         self._execute_code(code)
     
-    # def _get_tools_definition_code(tools: Dict[str, Tool]) -> str:
-    #     tool_codes = []
-    #     for tool in tools.values():
-    #         validate_tool_attributes(tool.__class__, check_imports=False)
-    #         tool_code = instance_to_source(tool, base_cls=Tool)
-    #         # tool_code = tool_code.replace("from smolagents.tools import Tool", "")
-    #         # tool_code += f"\n\n{tool.name} = {tool.__class__.__name__}()\n"
-    #         tool_codes.append(tool_code)
-
-    #     tool_definition_code = "\n".join([f"import {module}" for module in BASE_BUILTIN_MODULES])
-    #     tool_definition_code += "\n\n".join(tool_codes)
-    #     return tool_definition_code
-    
     def send_tools(self, tools: Dict[str, Tool]):
         """
         Set the tools available to the code by defining them in the kernel.
@@ -515,6 +561,11 @@ locals().update(vars_dict)
                 
             if self.logger:
                 self.logger.log("DockerExecutor cleanup completed", level=1)
+                
+            # Save final metrics
+            if hasattr(self, 'run_id') and self.run_id:
+                self._save_metrics()
+                
         except Exception as e:
             if self.logger:
                 self.logger.log_error(f"Error during cleanup: {e}")

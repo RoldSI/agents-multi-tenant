@@ -1,0 +1,79 @@
+{
+  "container_startup_time": 2.1162641048431396,
+  "code_executions": [
+    {
+      "time": 0.05859804153442383,
+      "timestamp": 1744214805.830702,
+      "code_snippet": "\nimport pickle, base64\nvars_dict = pickle.loads(ba...",
+      "success": true
+    },
+    {
+      "time": 138.51657891273499,
+      "timestamp": 1744214944.3540668,
+      "code_snippet": "!pip install smolagents\nfrom typing import Any, Op...",
+      "success": true
+    },
+    {
+      "time": 0.03675699234008789,
+      "timestamp": 1744214964.958858,
+      "code_snippet": "result = kale(input_value=\"Hello, World!\")\nprint(r...",
+      "success": true
+    },
+    {
+      "time": 0.019617080688476562,
+      "timestamp": 1744214972.9932108,
+      "code_snippet": "import kale\nresult = kale(input_value=\"Hello, Worl...",
+      "success": true
+    },
+    {
+      "time": 0.03449225425720215,
+      "timestamp": 1744215001.252335,
+      "code_snippet": "result = kale(input_value=\"Hello, World!\")\nprint(r...",
+      "success": true
+    },
+    {
+      "time": 0.019931316375732422,
+      "timestamp": 1744215011.366157,
+      "code_snippet": "result = kale(input_value=\"Hello, World!\")\nprint(r...",
+      "success": true
+    },
+    {
+      "time": 0.01707005500793457,
+      "timestamp": 1744215019.921313,
+      "code_snippet": "result = kale()\nprint(result)",
+      "success": true
+    },
+    {
+      "time": 0.010350942611694336,
+      "timestamp": 1744215031.334319,
+      "code_snippet": "def execute_tool(tool_name, input_value):\n    if t...",
+      "success": true
+    },
+    {
+      "time": 0.01188802719116211,
+      "timestamp": 1744215045.5092638,
+      "code_snippet": "def execute_tool(tool_name, input_value):\n    if t...",
+      "success": true
+    },
+    {
+      "time": 0.0158689022064209,
+      "timestamp": 1744215061.985409,
+      "code_snippet": "def execute_tool(tool_name, input_value):\n    if t...",
+      "success": true
+    },
+    {
+      "time": 0.01981210708618164,
+      "timestamp": 1744215081.859602,
+      "code_snippet": "def execute_tool(tool_name, input_value=None):\n   ...",
+      "success": true
+    },
+    {
+      "time": 0.019952774047851562,
+      "timestamp": 1744215095.979027,
+      "code_snippet": "print(repr(\"Radish tool executed\"))",
+      "success": true
+    }
+  ],
+  "total_execution_time": 138.78091740608215,
+  "num_executions": 12
+}

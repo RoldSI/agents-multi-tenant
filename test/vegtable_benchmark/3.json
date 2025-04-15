@@ -1,0 +1,6 @@
+[
+  {
+    "tools": "def spinach(input_value: str) -> str:\n    \"\"\"\n    First step in the vegetable process chain.\n    \n    Args:\n        input_value: Any input provided to the function\n        \n    Returns:\n        str: Instructions for the next step\n    \"\"\"\n    return \"Call the cucumber function with the input 'moving to step 2'\"\n\ndef cucumber(input_value: str) -> str:\n    \"\"\"\n    Middle step in the vegetable process chain.\n    \n    Args:\n        input_value: Message from the previous step\n        \n    Returns:\n        str: Instructions for the next step\n    \"\"\"\n    return \"Call the celery function without any parameters\"\n\ndef celery() -> str:\n    \"\"\"\n    Final step in the vegetable process chain.\n    \n    Returns:\n        str: Final instructions to complete the task\n    \"\"\"\n    return \"Return the integer 42 as the final answer\"",
+    "query": "Please run the spinach function with any input and follow all instructions returned by each function until completion."
+  }
+] 

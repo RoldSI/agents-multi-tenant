@@ -1,0 +1,55 @@
+{
+  "container_startup_time": 15.869965076446533,
+  "code_executions": [
+    {
+      "time": 0.0984499454498291,
+      "timestamp": 1744216230.211498,
+      "code_snippet": "\nimport pickle, base64\nvars_dict = pickle.loads(ba...",
+      "success": true
+    },
+    {
+      "time": 296.4830539226532,
+      "timestamp": 1744216526.700226,
+      "code_snippet": "!pip install smolagents\nfrom smolagents import Too...",
+      "success": true
+    },
+    {
+      "time": 0.05971097946166992,
+      "timestamp": 1744216538.6131809,
+      "code_snippet": "input_value = \"random input\"\nresult = shallot(inpu...",
+      "success": true
+    },
+    {
+      "time": 0.03574705123901367,
+      "timestamp": 1744216552.525512,
+      "code_snippet": "input_value = \"random input\"\nresult = shallot(inpu...",
+      "success": true
+    },
+    {
+      "time": 0.020013093948364258,
+      "timestamp": 1744216557.372052,
+      "code_snippet": "result = shallot(input_value=\"random input\")\nprint...",
+      "success": true
+    },
+    {
+      "time": 0.034587860107421875,
+      "timestamp": 1744216576.139914,
+      "code_snippet": "result = shallot(input_value=\"test\")\nprint(result)",
+      "success": true
+    },
+    {
+      "time": 0.019874095916748047,
+      "timestamp": 1744216599.1174421,
+      "code_snippet": "result = shallot(input_value=\"test\")\nprint(result)",
+      "success": true
+    },
+    {
+      "time": 0.04907703399658203,
+      "timestamp": 1744216599.166882,
+      "code_snippet": "print(repr(result))",
+      "success": true
+    }
+  ],
+  "total_execution_time": 296.8005139827728,
+  "num_executions": 8
+}

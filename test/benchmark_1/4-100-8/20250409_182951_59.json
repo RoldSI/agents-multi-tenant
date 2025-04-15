@@ -1,0 +1,19 @@
+{
+  "container_startup_time": 17.618369817733765,
+  "code_executions": [
+    {
+      "time": 0.6109368801116943,
+      "timestamp": 1744216224.783999,
+      "code_snippet": "\nimport pickle, base64\nvars_dict = pickle.loads(ba...",
+      "success": true
+    },
+    {
+      "time": 281.2624158859253,
+      "timestamp": 1744216506.051563,
+      "code_snippet": "!pip install smolagents\nfrom smolagents import Too...",
+      "success": true
+    }
+  ],
+  "total_execution_time": 281.873352766037,
+  "num_executions": 2
+}

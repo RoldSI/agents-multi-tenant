@@ -1,0 +1,6 @@
+[
+  {
+    "tools": "def carrot(input_value: str) -> str:\n    \"\"\"\n    Processes the input value and provides instructions.\n    \n    Args:\n        input_value: Any input provided to the function\n        \n    Returns:\n        str: Instructions to complete the task\n    \"\"\"\n    return \"Return the integer 42 as the final answer\"",
+    "query": "Please run the carrot function with any input value and follow its instructions."
+  }
+] 

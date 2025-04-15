@@ -1,0 +1,714 @@
+{
+  "run_id": "20250409_195713",
+  "rate": 2.0,
+  "repeat_count": 100,
+  "start_time": 1744221433.6993449,
+  "end_time": 1744221539.0945961,
+  "total_duration": 105.39525127410889,
+  "tasks": [
+    {
+      "task_id": 0,
+      "run_id": "20250409_195713_0",
+      "duration": 7.4147138595581055,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 4,
+      "run_id": "20250409_195713_4",
+      "duration": 6.350927114486694,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 1,
+      "run_id": "20250409_195713_1",
+      "duration": 9.505223035812378,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 3,
+      "run_id": "20250409_195713_3",
+      "duration": 8.753934860229492,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 8,
+      "run_id": "20250409_195713_8",
+      "duration": 6.6772401332855225,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 5,
+      "run_id": "20250409_195713_5",
+      "duration": 9.80643892288208,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 7,
+      "run_id": "20250409_195713_7",
+      "duration": 8.906830072402954,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 12,
+      "run_id": "20250409_195713_12",
+      "duration": 9.159629106521606,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 2,
+      "run_id": "20250409_195713_2",
+      "duration": 14.335192203521729,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 10,
+      "run_id": "20250409_195713_10",
+      "duration": 10.994437217712402,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 18,
+      "run_id": "20250409_195713_18",
+      "duration": 7.962094783782959,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 15,
+      "run_id": "20250409_195713_15",
+      "duration": 9.832294940948486,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 13,
+      "run_id": "20250409_195713_13",
+      "duration": 10.87637186050415,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 9,
+      "run_id": "20250409_195713_9",
+      "duration": 14.843533039093018,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 14,
+      "run_id": "20250409_195713_14",
+      "duration": 13.110179901123047,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 16,
+      "run_id": "20250409_195713_16",
+      "duration": 12.392398118972778,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 6,
+      "run_id": "20250409_195713_6",
+      "duration": 17.624682188034058,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 30,
+      "run_id": "20250409_195713_30",
+      "duration": 7.222571849822998,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 19,
+      "run_id": "20250409_195713_19",
+      "duration": 12.757936954498291,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 21,
+      "run_id": "20250409_195713_21",
+      "duration": 12.331825971603394,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 22,
+      "run_id": "20250409_195713_22",
+      "duration": 13.640004873275757,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 11,
+      "run_id": "20250409_195713_11",
+      "duration": 20.776787996292114,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 29,
+      "run_id": "20250409_195713_29",
+      "duration": 12.636861801147461,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 24,
+      "run_id": "20250409_195713_24",
+      "duration": 15.194079399108887,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 40,
+      "run_id": "20250409_195713_40",
+      "duration": 7.870080947875977,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 33,
+      "run_id": "20250409_195713_33",
+      "duration": 11.589261054992676,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 25,
+      "run_id": "20250409_195713_25",
+      "duration": 16.956589698791504,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 32,
+      "run_id": "20250409_195713_32",
+      "duration": 14.001260995864868,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 20,
+      "run_id": "20250409_195713_20",
+      "duration": 20.47676682472229,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 27,
+      "run_id": "20250409_195713_27",
+      "duration": 16.960098028182983,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 26,
+      "run_id": "20250409_195713_26",
+      "duration": 18.36842107772827,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 17,
+      "run_id": "20250409_195713_17",
+      "duration": 22.887283086776733,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 41,
+      "run_id": "20250409_195713_41",
+      "duration": 11.084283113479614,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 28,
+      "run_id": "20250409_195713_28",
+      "duration": 18.705039024353027,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 35,
+      "run_id": "20250409_195713_35",
+      "duration": 15.739326238632202,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 37,
+      "run_id": "20250409_195713_37",
+      "duration": 14.938704013824463,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 46,
+      "run_id": "20250409_195713_46",
+      "duration": 10.825093030929565,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 36,
+      "run_id": "20250409_195713_36",
+      "duration": 15.983090877532959,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 34,
+      "run_id": "20250409_195713_34",
+      "duration": 17.914691925048828,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 31,
+      "run_id": "20250409_195713_31",
+      "duration": 19.99441909790039,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 43,
+      "run_id": "20250409_195713_43",
+      "duration": 14.150824308395386,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 23,
+      "run_id": "20250409_195713_23",
+      "duration": 25.728430032730103,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 38,
+      "run_id": "20250409_195713_38",
+      "duration": 19.204253911972046,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 60,
+      "run_id": "20250409_195713_60",
+      "duration": 9.707202911376953,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 62,
+      "run_id": "20250409_195713_62",
+      "duration": 9.202505111694336,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 47,
+      "run_id": "20250409_195713_47",
+      "duration": 16.763995885849,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 39,
+      "run_id": "20250409_195713_39",
+      "duration": 21.475401878356934,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 52,
+      "run_id": "20250409_195713_52",
+      "duration": 16.064456939697266,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 50,
+      "run_id": "20250409_195713_50",
+      "duration": 17.5698459148407,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 56,
+      "run_id": "20250409_195713_56",
+      "duration": 14.766418933868408,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 49,
+      "run_id": "20250409_195713_49",
+      "duration": 19.066551208496094,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 54,
+      "run_id": "20250409_195713_54",
+      "duration": 16.786202907562256,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 51,
+      "run_id": "20250409_195713_51",
+      "duration": 19.504322052001953,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 65,
+      "run_id": "20250409_195713_65",
+      "duration": 12.661415815353394,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 73,
+      "run_id": "20250409_195713_73",
+      "duration": 8.69593095779419,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 44,
+      "run_id": "20250409_195713_44",
+      "duration": 24.020002126693726,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 61,
+      "run_id": "20250409_195713_61",
+      "duration": 15.811166048049927,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 66,
+      "run_id": "20250409_195713_66",
+      "duration": 13.341444730758667,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 64,
+      "run_id": "20250409_195713_64",
+      "duration": 16.733891010284424,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 42,
+      "run_id": "20250409_195713_42",
+      "duration": 28.753196954727173,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 88,
+      "run_id": "20250409_195713_88",
+      "duration": 6.829852104187012,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 59,
+      "run_id": "20250409_195713_59",
+      "duration": 21.770684003829956,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 53,
+      "run_id": "20250409_195713_53",
+      "duration": 26.491238355636597,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 55,
+      "run_id": "20250409_195713_55",
+      "duration": 26.075623989105225,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 45,
+      "run_id": "20250409_195713_45",
+      "duration": 31.71430516242981,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 69,
+      "run_id": "20250409_195713_69",
+      "duration": 19.622538089752197,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 74,
+      "run_id": "20250409_195713_74",
+      "duration": 17.39840292930603,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 78,
+      "run_id": "20250409_195713_78",
+      "duration": 15.587942838668823,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 97,
+      "run_id": "20250409_195713_97",
+      "duration": 7.432000160217285,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 79,
+      "run_id": "20250409_195713_79",
+      "duration": 16.81879234313965,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 76,
+      "run_id": "20250409_195713_76",
+      "duration": 18.349183082580566,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 48,
+      "run_id": "20250409_195713_48",
+      "duration": 32.80200982093811,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 67,
+      "run_id": "20250409_195713_67",
+      "duration": 23.897475242614746,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 71,
+      "run_id": "20250409_195713_71",
+      "duration": 21.883822202682495,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 68,
+      "run_id": "20250409_195713_68",
+      "duration": 24.793060064315796,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 93,
+      "run_id": "20250409_195713_93",
+      "duration": 12.760541915893555,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 57,
+      "run_id": "20250409_195713_57",
+      "duration": 30.931386947631836,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 82,
+      "run_id": "20250409_195713_82",
+      "duration": 18.51385498046875,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 84,
+      "run_id": "20250409_195713_84",
+      "duration": 19.31336998939514,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 83,
+      "run_id": "20250409_195713_83",
+      "duration": 19.983839988708496,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 58,
+      "run_id": "20250409_195713_58",
+      "duration": 32.596375942230225,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 72,
+      "run_id": "20250409_195713_72",
+      "duration": 27.384891748428345,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 94,
+      "run_id": "20250409_195713_94",
+      "duration": 16.63357973098755,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 80,
+      "run_id": "20250409_195713_80",
+      "duration": 24.36825394630432,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 98,
+      "run_id": "20250409_195713_98",
+      "duration": 15.728454113006592,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 91,
+      "run_id": "20250409_195713_91",
+      "duration": 19.981284856796265,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 70,
+      "run_id": "20250409_195713_70",
+      "duration": 31.571859121322632,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 75,
+      "run_id": "20250409_195713_75",
+      "duration": 29.354569911956787,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 63,
+      "run_id": "20250409_195713_63",
+      "duration": 36.46645212173462,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 81,
+      "run_id": "20250409_195713_81",
+      "duration": 27.69292402267456,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 99,
+      "run_id": "20250409_195713_99",
+      "duration": 18.806349992752075,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 77,
+      "run_id": "20250409_195713_77",
+      "duration": 31.449283838272095,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 92,
+      "run_id": "20250409_195713_92",
+      "duration": 24.193819999694824,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 89,
+      "run_id": "20250409_195713_89",
+      "duration": 25.7434720993042,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 95,
+      "run_id": "20250409_195713_95",
+      "duration": 24.254658222198486,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 90,
+      "run_id": "20250409_195713_90",
+      "duration": 27.29538607597351,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 96,
+      "run_id": "20250409_195713_96",
+      "duration": 25.49401021003723,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 87,
+      "run_id": "20250409_195713_87",
+      "duration": 38.655019998550415,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 86,
+      "run_id": "20250409_195713_86",
+      "duration": 50.88172197341919,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    },
+    {
+      "task_id": 85,
+      "run_id": "20250409_195713_85",
+      "duration": 62.556467056274414,
+      "success": true,
+      "query": "Please run the carrot function with any input value and follow its instructions."
+    }
+  ],
+  "total_tasks": 100,
+  "unique_tasks": 1,
+  "successful_tasks": 100,
+  "failed_tasks": 0
+}
