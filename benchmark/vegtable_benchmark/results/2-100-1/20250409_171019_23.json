@@ -1,0 +1,31 @@
+{
+  "container_startup_time": 2.4032859802246094,
+  "code_executions": [
+    {
+      "time": 0.04933500289916992,
+      "timestamp": 1744211433.378963,
+      "code_snippet": "\nimport pickle, base64\nvars_dict = pickle.loads(ba...",
+      "success": true
+    },
+    {
+      "time": 10.730651140213013,
+      "timestamp": 1744211444.1126862,
+      "code_snippet": "!pip install smolagents\nfrom smolagents import Too...",
+      "success": true
+    },
+    {
+      "time": 0.016594886779785156,
+      "timestamp": 1744211447.692663,
+      "code_snippet": "input_value = \"Hello World\"\ninstructions = carrot(...",
+      "success": true
+    },
+    {
+      "time": 0.011766910552978516,
+      "timestamp": 1744211453.187841,
+      "code_snippet": "print(repr(42))",
+      "success": true
+    }
+  ],
+  "total_execution_time": 10.808347940444946,
+  "num_executions": 4
+}

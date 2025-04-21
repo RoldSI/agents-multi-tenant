@@ -1,0 +1,73 @@
+{
+  "container_startup_time": 18.45816707611084,
+  "code_executions": [
+    {
+      "time": 0.4907071590423584,
+      "timestamp": 1744216227.335623,
+      "code_snippet": "\nimport pickle, base64\nvars_dict = pickle.loads(ba...",
+      "success": true
+    },
+    {
+      "time": 339.60118889808655,
+      "timestamp": 1744216566.943403,
+      "code_snippet": "!pip install smolagents\nfrom smolagents import Too...",
+      "success": true
+    },
+    {
+      "time": 0.025374889373779297,
+      "timestamp": 1744216579.902009,
+      "code_snippet": "result = shallot(input_value=\"Hello World\")\nprint(...",
+      "success": true
+    },
+    {
+      "time": 0.018895864486694336,
+      "timestamp": 1744216597.476185,
+      "code_snippet": "result = parsnip(input_value=\"beginning step 1 of ...",
+      "success": true
+    },
+    {
+      "time": 0.007676362991333008,
+      "timestamp": 1744216613.9381828,
+      "code_snippet": "result = rhubarb(input_value=\"moving to step 3\")\np...",
+      "success": true
+    },
+    {
+      "time": 0.028110742568969727,
+      "timestamp": 1744216627.278099,
+      "code_snippet": "result = yam(input_value=\"continuing process\")\npri...",
+      "success": true
+    },
+    {
+      "time": 0.019608020782470703,
+      "timestamp": 1744216645.823084,
+      "code_snippet": "result = endive(input_value=\"halfway through\")\npri...",
+      "success": true
+    },
+    {
+      "time": 0.0076138973236083984,
+      "timestamp": 1744216658.73243,
+      "code_snippet": "result = chard(input_value=\"three steps remaining\"...",
+      "success": true
+    },
+    {
+      "time": 0.010749340057373047,
+      "timestamp": 1744216676.568647,
+      "code_snippet": "result = kohlrabi(input_value=\"almost finished\")\np...",
+      "success": true
+    },
+    {
+      "time": 0.012369155883789062,
+      "timestamp": 1744216686.3114061,
+      "code_snippet": "result = cress()\nprint(result)",
+      "success": true
+    },
+    {
+      "time": 0.019831180572509766,
+      "timestamp": 1744216693.7386189,
+      "code_snippet": "print(repr(42))",
+      "success": true
+    }
+  ],
+  "total_execution_time": 340.24212551116943,
+  "num_executions": 11
+}

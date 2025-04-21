@@ -1,0 +1,67 @@
+{
+  "container_startup_time": 17.62376308441162,
+  "code_executions": [
+    {
+      "time": 0.3276050090789795,
+      "timestamp": 1744216229.346907,
+      "code_snippet": "\nimport pickle, base64\nvars_dict = pickle.loads(ba...",
+      "success": true
+    },
+    {
+      "time": 111.98907685279846,
+      "timestamp": 1744216341.3384519,
+      "code_snippet": "!pip install smolagents\nfrom smolagents import Too...",
+      "success": true
+    },
+    {
+      "time": 0.06516289710998535,
+      "timestamp": 1744216359.0009139,
+      "code_snippet": "output = shallot(input_value=\"any input\")\nprint(ou...",
+      "success": true
+    },
+    {
+      "time": 0.010541915893554688,
+      "timestamp": 1744216370.346857,
+      "code_snippet": "from importlib import import_module\nmodule = impor...",
+      "success": true
+    },
+    {
+      "time": 0.03842020034790039,
+      "timestamp": 1744216379.714396,
+      "code_snippet": "output = shallot(input_value=\"test input\")\nprint(o...",
+      "success": true
+    },
+    {
+      "time": 0.03821516036987305,
+      "timestamp": 1744216399.121583,
+      "code_snippet": "output = shallot(input_value=\"test\")\nprint(output)",
+      "success": true
+    },
+    {
+      "time": 0.006078004837036133,
+      "timestamp": 1744216408.009639,
+      "code_snippet": "print(\"Hello\")",
+      "success": true
+    },
+    {
+      "time": 0.02707219123840332,
+      "timestamp": 1744216423.6267562,
+      "code_snippet": "output = parsnip(input_value=\"test\")\nprint(output)",
+      "success": true
+    },
+    {
+      "time": 0.02491903305053711,
+      "timestamp": 1744216437.931381,
+      "code_snippet": "shallot_func = shallot\noutput = shallot_func(input...",
+      "success": true
+    },
+    {
+      "time": 0.010930061340332031,
+      "timestamp": 1744216458.7135732,
+      "code_snippet": "print(repr(\"Unable to call shallot function\"))",
+      "success": true
+    }
+  ],
+  "total_execution_time": 112.53802132606506,
+  "num_executions": 10
+}

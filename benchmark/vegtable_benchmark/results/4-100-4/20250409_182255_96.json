@@ -1,0 +1,67 @@
+{
+  "container_startup_time": 17.443368911743164,
+  "code_executions": [
+    {
+      "time": 0.2434520721435547,
+      "timestamp": 1744215817.432257,
+      "code_snippet": "\nimport pickle, base64\nvars_dict = pickle.loads(ba...",
+      "success": true
+    },
+    {
+      "time": 85.50444889068604,
+      "timestamp": 1744215902.9385002,
+      "code_snippet": "!pip install smolagents\nfrom smolagents import Too...",
+      "success": true
+    },
+    {
+      "time": 0.026043176651000977,
+      "timestamp": 1744215916.528987,
+      "code_snippet": "result = kale(input_value=\"Hello World\")\nprint(res...",
+      "success": true
+    },
+    {
+      "time": 0.019257068634033203,
+      "timestamp": 1744215925.4839401,
+      "code_snippet": "result = kale(input_value=\"Hello World\")\nprint(res...",
+      "success": true
+    },
+    {
+      "time": 0.03246283531188965,
+      "timestamp": 1744215935.941355,
+      "code_snippet": "from kale import kale\nresult = kale(input_value=\"H...",
+      "success": true
+    },
+    {
+      "time": 0.026587724685668945,
+      "timestamp": 1744215946.203764,
+      "code_snippet": "result = kale(input_value=\"Hello World\")\nprint(res...",
+      "success": true
+    },
+    {
+      "time": 0.02407383918762207,
+      "timestamp": 1744215961.449227,
+      "code_snippet": "kale(input_value=\"Hello World\")",
+      "success": true
+    },
+    {
+      "time": 0.020947933197021484,
+      "timestamp": 1744215970.865343,
+      "code_snippet": "input_value = \"Hello World\"\nkale(input_value=input...",
+      "success": true
+    },
+    {
+      "time": 0.06508111953735352,
+      "timestamp": 1744215980.851609,
+      "code_snippet": "kale()",
+      "success": true
+    },
+    {
+      "time": 0.008951187133789062,
+      "timestamp": 1744215989.3535008,
+      "code_snippet": "print(repr(\"I am unable to call the 'kale' functio...",
+      "success": true
+    }
+  ],
+  "total_execution_time": 85.97130584716797,
+  "num_executions": 10
+}

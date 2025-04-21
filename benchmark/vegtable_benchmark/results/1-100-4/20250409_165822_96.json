@@ -1,0 +1,49 @@
+{
+  "container_startup_time": 1.7869751453399658,
+  "code_executions": [
+    {
+      "time": 0.04497098922729492,
+      "timestamp": 1744210800.3658109,
+      "code_snippet": "\nimport pickle, base64\nvars_dict = pickle.loads(ba...",
+      "success": true
+    },
+    {
+      "time": 6.342952251434326,
+      "timestamp": 1744210806.713172,
+      "code_snippet": "!pip install smolagents\nfrom typing import Any, Op...",
+      "success": true
+    },
+    {
+      "time": 0.018956899642944336,
+      "timestamp": 1744210824.925268,
+      "code_snippet": "result = kale(input_value=\"Hello World\")\nprint(res...",
+      "success": true
+    },
+    {
+      "time": 0.008411884307861328,
+      "timestamp": 1744210845.138535,
+      "code_snippet": "result = lettuce(input_value=\"proceeding to next s...",
+      "success": true
+    },
+    {
+      "time": 0.01545405387878418,
+      "timestamp": 1744210870.672704,
+      "code_snippet": "result = zucchini(input_value=\"almost there\")\nprin...",
+      "success": true
+    },
+    {
+      "time": 0.016600847244262695,
+      "timestamp": 1744210885.662664,
+      "code_snippet": "result = radish()\nprint(result)",
+      "success": true
+    },
+    {
+      "time": 0.018954992294311523,
+      "timestamp": 1744210887.983863,
+      "code_snippet": "print(repr(42))",
+      "success": true
+    }
+  ],
+  "total_execution_time": 6.466301918029785,
+  "num_executions": 7
+}
