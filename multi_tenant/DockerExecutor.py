@@ -1,8 +1,10 @@
 import base64
+import io
 import json
 import pickle
 import re
 import socket
+import tarfile
 import tempfile
 import threading
 import time
@@ -52,7 +54,7 @@ class DockerExecutor(PythonExecutor):
 FROM python:3.12-slim
 
 # Install dependencies
-RUN pip install jupyter-kernel-gateway ipykernel
+RUN pip install jupyter-kernel-gateway ipykernel numpy smolagents
 
 RUN python -m ipykernel install --name python3 --display-name "Python 3"
 
@@ -149,7 +151,6 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
         logger=None,
         max_print_outputs_length: Optional[int] = None,
         host: str = "127.0.0.1",
-        run_id: Optional[str] = None,
         **kwargs
     ):
         """
@@ -160,7 +161,6 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
             logger: Logger for reporting status
             max_print_outputs_length (int, optional): Maximum length of print outputs
             host (str, optional): Host to bind the container port to
-            run_id (str, optional): Unique identifier for tracking metrics
         """
         self.logger = logger
         self.custom_tools = {}
@@ -170,15 +170,6 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
         
         # Docker-specific configuration
         self.host = host
-        
-        # Performance tracking
-        self.run_id = run_id or str(uuid.uuid4())
-        self.metrics = {
-            "container_startup_time": 0,
-            "code_executions": [],
-            "total_execution_time": 0,
-            "num_executions": 0
-        }
         
         # Assign a port if not explicitly provided
         self.port = self.find_free_port(host)
@@ -200,44 +191,21 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
                 self.logger.log_error(f"Failed to connect to Docker: {str(e)}")
             raise RuntimeError("Could not connect to Docker daemon. Make sure Docker is running.") from e
 
-    def _save_metrics(self):
-        """Save performance metrics to a JSON file."""
-        if not self.run_id:
-            return
-            
-        # Create results directory if it doesn't exist
-        os.makedirs("test/results", exist_ok=True)
-        
-        # Save metrics to file
-        metrics_file = f"test/results/{self.run_id}.json"
-        with open(metrics_file, 'w') as f:
-            json.dump(self.metrics, f, indent=2)
-        
-        if self.logger:
-            self.logger.log(f"Metrics saved to {metrics_file}", level="debug")
-
     def _start_container(self):
         """Start the persistent Docker container with Jupyter kernel."""
-        start_time = time.time()
         try:
             if self.logger:
                 self.logger.log(f"Starting container on {self.host}:{self.port}...", level="info")
             
-            if self.logger:
-                self.logger.log(f"Docker version: {self.client.version()}", level="debug")
-                
-            # Launch container
             self.container = self.client.containers.run(
                 self._image_name,
                 ports={f"8888/tcp": (self.host, self.port)},
                 detach=True,
-                name=f"jupyter-kernel-{self.port}-{self.run_id[:6]}"  # Use run_id in container name
-
+                name=f"jupyter-kernel-{self.port}"
             )
             
-            # Wait for container to be ready
             retries = 0
-            max_retries = 20  # Increased from 10
+            max_retries = 20
             while retries < max_retries:
                 self.container.reload()
                 if self.container.status == "running":
@@ -248,7 +216,6 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
             if self.container.status != "running":
                 raise RuntimeError(f"Container failed to start: {self.container.status}")
 
-            # Verify container is responsive by polling the /api endpoint
             base_url = f"http://{self.host}:{self.port}"
             api_url = f"{base_url}/api"
             http_retries = 0
@@ -306,15 +273,7 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
                 if self.logger:
                     self.logger.log("Additional packages installed.", level="debug")
              
-            # Record container startup time
-            container_startup_time = time.time() - start_time
-            self.metrics["container_startup_time"] = container_startup_time
-            
-            if self.logger:
-                self.logger.log(f"Container startup took {container_startup_time:.2f} seconds", level="info")
-                
-            # Save initial metrics
-            self._save_metrics()
+
                 
         except Exception as e:
             # Get container logs if available
@@ -409,22 +368,6 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
         # Record execution time
         execution_time = time.time() - start_time
         
-        # Update metrics
-        if self.run_id:
-            code_snippet = code[:50] + "..." if len(code) > 50 else code
-            execution_record = {
-                "time": execution_time,
-                "timestamp": time.time(),
-                "code_snippet": code_snippet,
-                "success": not any(line.startswith(("Exception", "Error")) for line in outputs)
-            }
-            self.metrics["code_executions"].append(execution_record)
-            self.metrics["total_execution_time"] += execution_time
-            self.metrics["num_executions"] += 1
-            
-            # Save updated metrics
-            self._save_metrics()
-                
         return result, "".join(outputs)
 
     def __call__(self, code_action: str) -> Tuple[Any, str, bool]:
@@ -444,6 +387,7 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
             output = ""
                 
             if is_final_answer:
+                print(f"FINAL ANSWER --- FINAL ANSWER --- FINAL ANSWER --- FINAL ANSWER --- FINAL ANSWER")
                 # Extract the code before final_answer and the final answer expression
                 match = self.final_answer_pattern.search(code_action)
                 pre_final_answer_code = code_action[:match.start()].strip()
@@ -455,19 +399,20 @@ CMD ["jupyter", "kernelgateway", "--KernelGatewayApp.ip=0.0.0.0", "--KernelGatew
                     output += pre_output
                 
                 # Evaluate the final answer expression with the executor
-                _, expr_output = self._execute_code(f"print(repr({final_answer_expr}))")
+                print(f"print(final_answer({final_answer_expr}))")
+                _, expr_output = self._execute_code(f"print(final_answer({final_answer_expr}))")
                 output += expr_output
                 
                 # Extract the evaluated result
                 try:
                     # Get the last line which should contain our result
                     result_line = expr_output.strip().split('\n')[-1]
-                    final_answer_value = eval(result_line)
+                    final_answer_value = result_line #eval(result_line)
                 except Exception as e:
                     # If evaluation fails, log the error and use the expression as is
                     if self.logger:
                         self.logger.log_error(f"Failed to evaluate final answer: {str(e)}")
-                    final_answer_value = final_answer_expr
+                    # final_answer_value = final_answer_expr
             else:
                 # Regular code execution
                 result, output = self._execute_code(code_action)
@@ -517,7 +462,6 @@ locals().update(vars_dict)
         # tool_definition_code = get_tools_definition_code(tools)
         tool_definition_codes = set()
         packages_to_install = set()
-        packages_to_install.add("smolagents")
 
         for tool in tools.values():
             # Encode the tool using pickle and base64 for secure transmission
@@ -526,9 +470,15 @@ locals().update(vars_dict)
             tool_definition_codes.add(tool_code)
             for package in tool.to_dict()["requirements"]:
                 packages_to_install.add(package)
+                
+        packages_to_install.remove("smolagents")
 
+        if packages_to_install:
+            self._execute_code(
+                f"!pip install {' '.join(packages_to_install)}"
+            )
         self._execute_code(
-            f"!pip install {' '.join(packages_to_install)}\n{'\n'.join(tool_definition_codes)}"
+            f"{'\n'.join(tool_definition_codes)}"
         )
     
     def cleanup(self):
@@ -562,10 +512,6 @@ locals().update(vars_dict)
             if self.logger:
                 self.logger.log("DockerExecutor cleanup completed", level=1)
                 
-            # Save final metrics
-            if hasattr(self, 'run_id') and self.run_id:
-                self._save_metrics()
-                
         except Exception as e:
             if self.logger:
                 self.logger.log_error(f"Error during cleanup: {e}")
@@ -575,3 +521,71 @@ locals().update(vars_dict)
         Ensure cleanup when the executor is destroyed.
         """
         self.cleanup()
+
+    def execute_with_files(self, files: Dict[str, str], commands: List[str]) -> Dict[str, str]:
+        """
+        Copy files into the container, execute commands, and clean up files.
+        
+        Args:
+            files: Dictionary mapping container paths to local file paths
+            commands: List of commands to execute in the container
+            
+        Returns:
+            Dictionary mapping command indices to their outputs
+        """
+        if not self.container:
+            raise RuntimeError("Container not started")
+            
+        results = {}
+        
+        try:
+            # Copy files into container
+            for container_path, local_path in files.items():
+                # Create directory if it doesn't exist
+                dir_path = os.path.dirname(container_path)
+                container_filename = os.path.basename(container_path)
+                if dir_path:
+                    self.container.exec_run(f"mkdir -p {dir_path}")
+                
+                tarstream = io.BytesIO()
+                with tarfile.open(fileobj=tarstream, mode='w') as tar:
+                    tar.add(local_path, arcname=container_filename)
+                tarstream.seek(0)
+
+                success = self.container.put_archive(path=dir_path, data=tarstream.read())
+                if not success:
+                    raise RuntimeError(f"Failed to copy {local_path} to {container_path}")
+            
+            # Execute commands
+            for i, cmd in enumerate(commands):
+                # Execute command in a proper shell environment using sh -c
+                # Escape single quotes in the command to handle them properly
+                escaped_cmd = cmd.replace("'", "'\\''")
+                exit_code, output = self.container.exec_run(f"sh -c '{escaped_cmd}'")
+                # exit_code, output = self.container.exec_run(cmd)
+                results[str(i)] = {
+                    "exit_code": exit_code,
+                    "output": output.decode('utf-8') if output else ""
+                }
+            
+            # Clean up files
+            for container_path in files.keys():
+                self.container.exec_run(f"rm -f {container_path}")
+                # Remove parent directory if empty
+                dir_path = os.path.dirname(container_path)
+                if dir_path:
+                    self.container.exec_run(f"rmdir {dir_path} 2>/dev/null || true")
+            
+            return results
+            
+        except Exception as e:
+            # Clean up files in case of error
+            try:
+                for container_path in files.keys():
+                    self.container.exec_run(f"rm -f {container_path}")
+                    dir_path = os.path.dirname(container_path)
+                    if dir_path:
+                        self.container.exec_run(f"rmdir {dir_path} 2>/dev/null || true")
+            except:
+                pass
+            raise RuntimeError(f"Error executing with files: {str(e)}")

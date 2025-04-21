@@ -9,12 +9,12 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setup(
     name="multi-tenant-agents",
     version="0.1.0",
-    author="Your Name",
-    author_email="your.email@example.com",
+    author="Simon Sure",
+    author_email="info@simonsure.com",
     description="A multi-tenant wrapper around smolagents",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/agents-multi-tenant",
+    url="https://github.com/RoldSI/agents-multi-tenant",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
